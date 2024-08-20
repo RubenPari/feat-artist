@@ -4,11 +4,10 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc && npx prettier . --write && node dist/index.js",
-    "prod": "node dist/index.js",
-    "eslint": "npx eslint src/**/*.ts --fix",
-    "prettier": "npx prettier . --write"
+    "dev": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports .\\src\\index.ts",
+    "prod": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports .\\src\\index.ts",
+    "lint": "deno lint --unstable .\\src\\.",
+    "fmt": "deno fmt .\\src\\."
   },
   "keywords": [],
   "author": "",
@@ -16,24 +15,15 @@
   "description": "",
   "dependencies": {
     "@googleapis/docs": "^3.0.2",
-    "axios": "^1.7.2",
-    "dotenv": "^16.4.5",
+    "axios": "^1.7.4",
     "fastify": "^4.28.0",
     "googleapis": "^140.0.1",
     "spotify-web-api-node": "^5.0.2",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.6.0",
     "@types/axios": "^0.14.0",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.11",
     "@types/spotify-web-api-node": "^5.0.11",
-    "@types/uuid": "^10.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "prettier": "3.3.2",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^7.15.0"
+    "@types/uuid": "^10.0.0"
   }
 }

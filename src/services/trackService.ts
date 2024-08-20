@@ -2,6 +2,7 @@ import SpotifyApiService from "./spotifyApiService";
 import TrackDto from "../dto/trackDto";
 import convertTracksObjectToDto from "../utils/convertTracksObject";
 import axios from "axios";
+import "jsr:@std/dotenv/load";
 
 const client = SpotifyApiService.getInstance().client;
 const INTERNATIONAL_RADIO_EDIT = "International Radio Edit";
@@ -11,7 +12,7 @@ const EDITED = "(Edited)";
 const ACOUSTIC = "Acoustic";
 const INSTRUMENTAL = "Instrumental";
 const NBA_VERSION = "NBA Version";
-const DETRIMENTAL = " Detrimental";
+const DETRIMENTAL = "Detrimental";
 const CLEAR = "Clear";
 
 /**
@@ -153,7 +154,7 @@ async function getAllTracksBadMeetsEvil(): Promise<TrackDto[]> {
 /**
  * Remove duplicate tracks based on track name
  */
-async function removeDuplicateTracks(tracks: TrackDto[]): Promise<TrackDto[]> {
+function removeDuplicateTracks(tracks: TrackDto[]): TrackDto[] {
   // filter tracks with extra content in name
   let filteredTracks = tracks.filter((track) => {
     return (
@@ -202,13 +203,13 @@ async function orderTracksByListeners(tracks: TrackDto[]): Promise<TrackDto[]> {
   for (const track of tracks_1) {
     const options = {
       method: "GET",
-      url: process.env.X_RAPIDAPI_BASE_ENDPOINT,
+      url: Deno.env.get("X_RAPIDAPI_BASE_ENDPOINT"),
       params: {
         q: track.name,
       },
       headers: {
-        "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
-        "x-rapidapi-host": process.env.X_RAPIDAPI_HOST,
+        "x-rapidapi-key": Deno.env.get("X_RAPIDAPI_KEY"),
+        "x-rapidapi-host": Deno.env.get("X_RAPIDAPI_HOST"),
       },
     };
 
@@ -222,11 +223,11 @@ async function orderTracksByListeners(tracks: TrackDto[]): Promise<TrackDto[]> {
 }
 
 export {
+  getAllTracksBadMeetsEvil,
+  getAllTracksD12,
+  orderTracksByListeners,
+  removeDuplicateTracks,
   searchTracksEminem,
   searchTracksFeatEminem,
   searchTracksWithEminem,
-  getAllTracksD12,
-  getAllTracksBadMeetsEvil,
-  removeDuplicateTracks,
-  orderTracksByListeners,
 };

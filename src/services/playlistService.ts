@@ -1,6 +1,7 @@
 import spotifyApiService from "./spotifyApiService";
 import axios from "axios";
 import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse";
+import "jsr:@std/dotenv/load";
 
 const VERSION_API_CLEAR_SONGS = "/v1";
 
@@ -15,7 +16,7 @@ async function addTracksToPlaylist(tracks: string[]): Promise<boolean> {
       const added = await spotifyApiService
         .getInstance()
         .client.addTracksToPlaylist(
-          process.env.PLAYLIST_FEAT_EMINEM_ID!,
+          Deno.env.get("PLAYLIST_FEAT_EMINEM_ID"),
           currentTracks,
         );
 
@@ -42,8 +43,7 @@ async function removeAllPlaylistTracks(
 
   const options = {
     method: "GET",
-    url:
-      process.env.CLEAR_SONGS_API_BASE_URL +
+    url: Deno.env.get("CLEAR_SONGS_API_BASE_URL") +
       VERSION_API_CLEAR_SONGS +
       "/playlist/delete-tracks",
     params: {

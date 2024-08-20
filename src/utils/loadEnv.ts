@@ -1,15 +1,16 @@
-import "dotenv/config";
-import path from "path";
+import { config as dotenv } from "dotenv";
 
-const loadEnv = () => {
-  const envPath = path.join(__dirname, "../../.env");
+const loadEnv = async () => {
+  const envPath = new URL("../../.env", import.meta.url).pathname;
 
   try {
-    require("dotenv").config({ path: envPath });
+    await dotenv({ path: envPath });
     console.log("Environment variables loaded successfully");
   } catch (e) {
-    console.log("Error loading .env file" + e);
+    console.log("Error loading .env file: " + e);
   }
 };
+
+await loadEnv();
 
 export default loadEnv;

@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import {
   getAllTracksBadMeetsEvil,
   getAllTracksD12,
@@ -14,6 +14,7 @@ import {
 } from "../services/playlistService";
 import TrackDto from "../dto/trackDto";
 import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse";
+import "jsr:@std/dotenv/load";
 
 const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
   // search all tracks with query 'Eminem' and where first artist isn't Eminem
@@ -41,7 +42,7 @@ const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
   // added tracks from Bad Meets Evil and D12
   filteredTracks.push(...tracksBadMeetsEvil, ...tracksD12);
 
-  const uniqueTracks = await removeDuplicateTracks(filteredTracks);
+  const uniqueTracks = removeDuplicateTracks(filteredTracks);
 
   // order tracks by number of listeners on YouTube
   let orderedTracks = new Array<TrackDto>();
@@ -53,7 +54,7 @@ const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
 
   // clear playlist before adding new tracks
   const cleared = await removeAllPlaylistTracks(
-    process.env.PLAYLIST_FEAT_EMINEM_ID!,
+    Deno.env.get("PLAYLIST_FEAT_EMINEM_ID"),
   );
 
   switch (cleared) {

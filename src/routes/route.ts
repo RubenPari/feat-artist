@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import authController from "../controllers/authController";
 import featEminemController from "../controllers/featEminemController";
 
-const setUpRoutes = async (fastify: FastifyInstance) => {
+const setUpRoutes = (fastify: FastifyInstance) => {
   // ######## /auth ########
   fastify.register(
     (fastify, _opts, done) => {

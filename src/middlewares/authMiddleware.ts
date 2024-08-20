@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import SpotifyApiService from "../services/spotifyApiService";
 
-async function authMiddleware(_request: FastifyRequest, reply: FastifyReply) {
+function authMiddleware(_request: FastifyRequest, reply: FastifyReply) {
   // check if request is for /auth endpoints
   if (_request.url.includes("/auth")) {
     return;
