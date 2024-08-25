@@ -1,29 +1,19 @@
 {
-  "name": "feat-artist",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "commonjs",
-  "scripts": {
-    "dev": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports ./src/index.ts",
-    "prod": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports ./src/index.ts",
-    "lint": "deno lint --unstable ./src/.",
-    "fmt": "deno fmt ./src/."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@googleapis/docs": "^3.0.2",
-    "axios": "^1.7.4",
-    "fastify": "^4.28.0",
-    "googleapis": "^140.0.1",
-    "spotify-web-api-node": "^5.0.2",
-    "uuid": "^10.0.0"
-  },
-  "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/spotify-web-api-node": "^5.0.11",
-    "@types/uuid": "^10.0.0"
-  }
+    "scripts": {
+        "start": "bun run src/index.ts",
+        "dev": "bun run --watch src/index.ts",
+        "lint": "eslint ./src --ext .ts",
+        "format": "prettier --write \"src/**/*.ts\"",
+        "build": "bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
+    },
+    "dependencies": {
+        "@elysiajs/swagger": "^1.1.1",
+        "elysia": "^1.1.7"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.2.0",
+        "@typescript-eslint/parser": "^8.2.0",
+        "eslint": "^9.9.1",
+        "prettier": "^3.3.3"
+    }
 }
