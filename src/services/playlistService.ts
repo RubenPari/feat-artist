@@ -1,7 +1,8 @@
-import spotifyApiService from "./spotifyApiService";
-import axios from "axios";
-import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse";
+import spotifyApiService from "./spotifyApiService.ts";
+import axios from "npm:axios@1.7.4";
+import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse.ts";
 import "jsr:@std/dotenv/load";
+import console from "node:console";
 
 const VERSION_API_CLEAR_SONGS = "/v1";
 

@@ -1,9 +1,10 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { v4 as uuidv4 } from "uuid";
-import SpotifyApiService from "../services/spotifyApiService";
+import { v4 as uuidv4 } from "npm:uuid@^10.0.0";
+import SpotifyApiService from "../services/spotifyApiService.ts";
 import "jsr:@std/dotenv/load";
+import { Context } from "elysia";
+import console from "node:console";
 
-const login = (_request: FastifyRequest, reply: FastifyReply) => {
+const login = (context: Context) => {
   const scopes = Deno.env.get("SCOPES")
     ? Deno.env.get("SCOPES").split(" ")
     : [];
@@ -13,37 +14,49 @@ const login = (_request: FastifyRequest, reply: FastifyReply) => {
   const authorizeURL = SpotifyApiService.getInstance().client
     .createAuthorizeURL(scopes, state);
 
-  reply.redirect(authorizeURL);
+  context.redirect(authorizeURL);
 };
 
-const callback = async (request: FastifyRequest, reply: FastifyReply) => {
-  const code = request.query.code as string;
+const callback = async (context: Context) => {
+  const code = context.query.code;
+
+  if (!code) {
+    context.set.status = 400;
+    context.body = {
+      error: "No code provided",
+    };
+    return;
+  }
 
   try {
     const data = await SpotifyApiService.getInstance().client
-      .authorizationCodeGrant(code);
+      .authorizationCodeGrant(code!);
 
     const { access_token, refresh_token } = data.body;
 
     SpotifyApiService.getInstance().client.setAccessToken(access_token);
     SpotifyApiService.getInstance().client.setRefreshToken(refresh_token);
 
-    reply.send("You are now logged in to Spotify!");
+    context.response = {
+      "message": "You are now logged in to Spotify!",
+    };
   } catch (error) {
     console.error(error);
-    reply.send("An error occurred while trying to log in to Spotify.");
+
+    context.set.status = 500;
+    context.body = {
+      error: "Error occurred while logging in",
+    };
   }
 };
 
-const logout = (_request: FastifyRequest, reply: FastifyReply) => {
+const logout = (context: Context) => {
   SpotifyApiService.getInstance().client.resetAccessToken();
   SpotifyApiService.getInstance().client.resetRefreshToken();
 
-  reply.send("You are now logged out of Spotify!");
+  context.response = {
+    "message": "You have been logged out of Spotify!",
+  };
 };
 
-export default {
-  login,
-  callback,
-  logout,
-};
+export { callback, login, logout };

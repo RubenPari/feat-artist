@@ -1,4 +1,4 @@
-import SpotifyWebApi from "spotify-web-api-node";
+import SpotifyWebApi from "npm:spotify-web-api-node@5.0.2";
 import "jsr:@std/dotenv/load";
 
 class SpotifyApiService {

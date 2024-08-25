@@ -1,4 +1,4 @@
-import TrackDto from "../dto/trackDto";
+import TrackDto from "../dto/trackDto.ts";
 
 function convertTracksObjectToDto(
   tracksObjects:

@@ -1,20 +1,12 @@
-import fastify from "fastify";
-import setUpRoutes from "./routes/route";
-import authMiddleware from "./middlewares/authMiddleware";
-import process from "node:process";
-import console from "node:console";
+import { Elysia } from "elysia";
+import { swagger } from "@elysiajs/swagger";
+import { callback, login, logout } from "./controllers/authController.ts";
+import authMiddleware from "./middlewares/authMiddleware.ts";
 
-const server = fastify();
-
-// set up middleware
-server.addHook("preHandler", authMiddleware);
-
-setUpRoutes(server);
-
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`Server listening at ${address}`);
-});
+new Elysia()
+  .use(swagger())
+  .use(authMiddleware)
+  .get("/auth/login", login)
+  .get("/auth/callback", callback)
+  .get("/auth/logout", logout)
+  .listen(8080);

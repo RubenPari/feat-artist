@@ -1,7 +1,7 @@
-import SpotifyApiService from "./spotifyApiService";
-import TrackDto from "../dto/trackDto";
-import convertTracksObjectToDto from "../utils/convertTracksObject";
-import axios from "axios";
+import SpotifyApiService from "./spotifyApiService.ts";
+import TrackDto from "../dto/trackDto.ts";
+import convertTracksObjectToDto from "../utils/convertTracksObject.ts";
+import axios from "npm:axios@10.0.0";
 import "jsr:@std/dotenv/load";
 
 const client = SpotifyApiService.getInstance().client;

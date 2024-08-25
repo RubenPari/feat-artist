@@ -1,15 +1,23 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import SpotifyApiService from "../services/spotifyApiService";
+import { Context, Elysia } from "elysia";
+import SpotifyApiService from "../services/spotifyApiService.ts";
 
-function authMiddleware(_request: FastifyRequest, reply: FastifyReply) {
-  // check if request is for /auth endpoints
-  if (_request.url.includes("/auth")) {
-    return;
-  }
-  // Check if the client has an access token
-  if (!SpotifyApiService.getInstance().client.getAccessToken()) {
-    reply.status(401).send({ error: "Unauthorized" });
-  }
-}
+const authMiddleware = new Elysia()
+  .derive(function (context: Context) {
+    // Pass if request is for /auth endpoints
+    if (context.path.startsWith("/auth")) {
+      return;
+    }
+
+    const spotifyService = SpotifyApiService.getInstance();
+    const accessToken = spotifyService.client.getAccessToken();
+
+    if (!accessToken) {
+      context.set.status = 401;
+      context.body = {
+        error: "Unauthorized",
+      };
+      return;
+    }
+  });
 
 export default authMiddleware;
