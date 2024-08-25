@@ -1,9 +1,9 @@
-import TrackDto from "../dto/trackDto.ts";
+import TrackDto from '../dto/trackDto';
 
 function convertTracksObjectToDto(
   tracksObjects:
     | SpotifyApi.TrackObjectFull[]
-    | SpotifyApi.TrackObjectSimplified[],
+    | SpotifyApi.TrackObjectSimplified[]
 ): TrackDto[] {
   return tracksObjects.map((track) => {
     return {

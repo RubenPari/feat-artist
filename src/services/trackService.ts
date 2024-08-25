@@ -1,19 +1,18 @@
-import SpotifyApiService from "./spotifyApiService.ts";
-import TrackDto from "../dto/trackDto.ts";
-import convertTracksObjectToDto from "../utils/convertTracksObject.ts";
-import axios from "npm:axios@10.0.0";
-import "jsr:@std/dotenv/load";
+import SpotifyApiService from './spotifyApiService';
+import TrackDto from '../dto/trackDto';
+import convertTracksObjectToDto from '../utils/convertTracksObject';
+import axios from 'axios';
 
 const client = SpotifyApiService.getInstance().client;
-const INTERNATIONAL_RADIO_EDIT = "International Radio Edit";
-const RADIO_EDIT = "Radio Edit";
-const LIVE = "Live";
-const EDITED = "(Edited)";
-const ACOUSTIC = "Acoustic";
-const INSTRUMENTAL = "Instrumental";
-const NBA_VERSION = "NBA Version";
-const DETRIMENTAL = "Detrimental";
-const CLEAR = "Clear";
+const INTERNATIONAL_RADIO_EDIT = 'International Radio Edit';
+const RADIO_EDIT = 'Radio Edit';
+const LIVE = 'Live';
+const EDITED = '(Edited)';
+const ACOUSTIC = 'Acoustic';
+const INSTRUMENTAL = 'Instrumental';
+const NBA_VERSION = 'NBA Version';
+const DETRIMENTAL = 'Detrimental';
+const CLEAR = 'Clear';
 
 /**
  * Search tracks with query string "Eminem"
@@ -26,7 +25,7 @@ async function searchTracksEminem(): Promise<TrackDto[]> {
   const tracks = Array<SpotifyApi.TrackObjectFull>();
 
   while (offset < maxOffset) {
-    const searchTracksEminem = await client.searchTracks("Eminem", {
+    const searchTracksEminem = await client.searchTracks('Eminem', {
       limit,
       offset,
     });
@@ -50,7 +49,7 @@ async function searchTracksFeatEminem(): Promise<TrackDto[]> {
   const tracks = Array<SpotifyApi.TrackObjectFull>();
 
   while (offset < maxOffset) {
-    const searchTracksFeatEminem = await client.searchTracks("feat. Eminem", {
+    const searchTracksFeatEminem = await client.searchTracks('feat. Eminem', {
       limit,
       offset,
     });
@@ -74,7 +73,7 @@ async function searchTracksWithEminem(): Promise<TrackDto[]> {
   const tracks = Array<SpotifyApi.TrackObjectFull>();
 
   while (offset < maxOffset) {
-    const searchTracksWithEminem = await client.searchTracks("with Eminem", {
+    const searchTracksWithEminem = await client.searchTracks('with Eminem', {
       limit,
       offset,
     });
@@ -91,14 +90,14 @@ async function searchTracksWithEminem(): Promise<TrackDto[]> {
  * Get all tracks from D12
  */
 async function getAllTracksD12(): Promise<TrackDto[]> {
-  const d12Artist = await client.searchArtists("D12").then((res) => {
+  const d12Artist = await client.searchArtists('D12').then((res) => {
     return res.body.artists!.items[0];
   });
 
   // get all albums from D12
   const albums = await client
     .getArtistAlbums(d12Artist.id, {
-      include_groups: "album,single,compilation",
+      include_groups: 'album,single,compilation',
     })
     .then((res) => res.body.items);
 
@@ -121,7 +120,7 @@ async function getAllTracksD12(): Promise<TrackDto[]> {
  */
 async function getAllTracksBadMeetsEvil(): Promise<TrackDto[]> {
   const badMeetsEvilArtist = await client
-    .searchArtists("Bad Meets Evil")
+    .searchArtists('Bad Meets Evil')
     .then((res) => {
       return res.body.artists!.items[0];
     });
@@ -129,13 +128,13 @@ async function getAllTracksBadMeetsEvil(): Promise<TrackDto[]> {
   // get all albums from Bad Meets Evil
   let albums = await client
     .getArtistAlbums(badMeetsEvilArtist.id, {
-      include_groups: "album,single,compilation",
+      include_groups: 'album,single,compilation',
     })
     .then((res) => res.body.items);
 
   // remove album with name "Hell: The Sequel"
   // for leave only "Hell: The Sequel (Deluxe Edition)"
-  albums = albums.filter((album) => album.name !== "Hell: The Sequel");
+  albums = albums.filter((album) => album.name !== 'Hell: The Sequel');
 
   const tracks = Array<SpotifyApi.TrackObjectSimplified>();
 
@@ -182,8 +181,8 @@ function removeDuplicateTracks(tracks: TrackDto[]): TrackDto[] {
   filteredTracks = filteredTracks.filter((track) => {
     return !filteredTracks.find((t) => {
       return (
-        t.name.includes("Remaster") &&
-        track.name.includes("Remaster") &&
+        t.name.includes('Remaster') &&
+        track.name.includes('Remaster') &&
         t.name !== track.name
       );
     });
@@ -202,14 +201,14 @@ async function orderTracksByListeners(tracks: TrackDto[]): Promise<TrackDto[]> {
 
   for (const track of tracks_1) {
     const options = {
-      method: "GET",
-      url: Deno.env.get("X_RAPIDAPI_BASE_ENDPOINT"),
+      method: 'GET',
+      url: process.env.X_RAPIDAPI_BASE_ENDPOINT,
       params: {
         q: track.name,
       },
       headers: {
-        "x-rapidapi-key": Deno.env.get("X_RAPIDAPI_KEY"),
-        "x-rapidapi-host": Deno.env.get("X_RAPIDAPI_HOST"),
+        'x-rapidapi-key': process.env.X_RAPIDAPI_KEY,
+        'x-rapidapi-host': process.env.X_RAPIDAPI_HOST,
       },
     };
 

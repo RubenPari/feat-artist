@@ -1,3 +1,4 @@
+/*
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
   getAllTracksBadMeetsEvil,
@@ -54,7 +55,7 @@ const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
 
   // clear playlist before adding new tracks
   const cleared = await removeAllPlaylistTracks(
-    Deno.env.get("PLAYLIST_FEAT_EMINEM_ID"),
+    process.env."PLAYLIST_FEAT_EMINEM_ID"),
   );
 
   switch (cleared) {
@@ -81,3 +82,4 @@ const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
 export default {
   featEminem,
 };
+*/

@@ -1,5 +1,4 @@
-import SpotifyWebApi from "npm:spotify-web-api-node@5.0.2";
-import "jsr:@std/dotenv/load";
+import SpotifyWebApi from 'spotify-web-api-node';
 
 class SpotifyApiService {
   private static instance: SpotifyApiService;
@@ -7,9 +6,9 @@ class SpotifyApiService {
 
   private constructor() {
     this.client = new SpotifyWebApi({
-      clientId: Deno.env.get("CLIENT_ID"),
-      clientSecret: Deno.env.get("CLIENT_SECRET"),
-      redirectUri: Deno.env.get("REDIRECT_URI"),
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      redirectUri: process.env.REDIRECT_URI,
     });
   }
 

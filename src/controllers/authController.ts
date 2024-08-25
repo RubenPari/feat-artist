@@ -1,18 +1,14 @@
-import { v4 as uuidv4 } from "npm:uuid@^10.0.0";
-import SpotifyApiService from "../services/spotifyApiService.ts";
-import "jsr:@std/dotenv/load";
-import { Context } from "elysia";
-import console from "node:console";
+import { v4 as uuidv4 } from 'uuid';
+import SpotifyApiService from '../services/spotifyApiService';
+import { Context } from 'elysia';
 
 const login = (context: Context) => {
-  const scopes = Deno.env.get("SCOPES")
-    ? Deno.env.get("SCOPES").split(" ")
-    : [];
+  const scopes = process.env.SCOPES ? process.env.SCOPES.split(' ') : [];
 
   const state = uuidv4();
 
-  const authorizeURL = SpotifyApiService.getInstance().client
-    .createAuthorizeURL(scopes, state);
+  const authorizeURL =
+    SpotifyApiService.getInstance().client.createAuthorizeURL(scopes, state);
 
   context.redirect(authorizeURL);
 };
@@ -23,14 +19,16 @@ const callback = async (context: Context) => {
   if (!code) {
     context.set.status = 400;
     context.body = {
-      error: "No code provided",
+      error: 'No code provided',
     };
     return;
   }
 
   try {
-    const data = await SpotifyApiService.getInstance().client
-      .authorizationCodeGrant(code!);
+    const data =
+      await SpotifyApiService.getInstance().client.authorizationCodeGrant(
+        code!
+      );
 
     const { access_token, refresh_token } = data.body;
 
@@ -38,14 +36,14 @@ const callback = async (context: Context) => {
     SpotifyApiService.getInstance().client.setRefreshToken(refresh_token);
 
     context.response = {
-      "message": "You are now logged in to Spotify!",
+      message: 'You are now logged in to Spotify!',
     };
   } catch (error) {
     console.error(error);
 
     context.set.status = 500;
     context.body = {
-      error: "Error occurred while logging in",
+      error: 'Error occurred while logging in',
     };
   }
 };
@@ -55,7 +53,7 @@ const logout = (context: Context) => {
   SpotifyApiService.getInstance().client.resetRefreshToken();
 
   context.response = {
-    "message": "You have been logged out of Spotify!",
+    message: 'You have been logged out of Spotify!',
   };
 };
 
