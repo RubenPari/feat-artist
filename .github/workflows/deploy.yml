@@ -34,6 +34,6 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "rubenpari-feat-eminem-16"
+          project: "rubenpari-feat-artist-16"
           entrypoint: "./index.ts"
           root: "./src"

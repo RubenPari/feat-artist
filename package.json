@@ -1,13 +1,13 @@
 {
-  "name": "feat-eminem",
+  "name": "feat-artist",
   "version": "1.0.0",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports .\\src\\index.ts",
-    "prod": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports .\\src\\index.ts",
-    "lint": "deno lint --unstable .\\src\\.",
-    "fmt": "deno fmt .\\src\\."
+    "dev": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports ./src/index.ts",
+    "prod": "deno run --allow-net --allow-env --allow-sys --allow-read --unstable-sloppy-imports ./src/index.ts",
+    "lint": "deno lint --unstable ./src/.",
+    "fmt": "deno fmt ./src/."
   },
   "keywords": [],
   "author": "",

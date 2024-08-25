@@ -14,13 +14,13 @@ const setUpRoutes = (fastify: FastifyInstance) => {
     { prefix: "/auth" },
   );
 
-  // ######## /feat-eminem ########
+  // ######## /feat-artist ########
   fastify.register(
     (fastify, _opts, done) => {
       fastify.get("/", featEminemController.featEminem);
       done();
     },
-    { prefix: "/feat-eminem" },
+    { prefix: "/feat-artist" },
   );
 };
 
