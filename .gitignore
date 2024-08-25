@@ -96,3 +96,6 @@ dist/
 .flaskenv*
 !.env.project
 !.env.vault
+
+# binary
+feat-eminem

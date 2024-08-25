@@ -29,14 +29,11 @@ jobs:
           node-version: lts/*
 
       - name: Install step
-        run: "deno cache src/index.ts"
-
-      - name: Build step
-        run: "deno compile --unstable --allow-net --allow-env --allow-sys --allow-read --output ./bin/feat-eminem ./src/index.ts"
+        run: "npm i"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "rubenpari-feat-eminem-34"
-          entrypoint: "./bin/feat-eminem"
-          root: "./"
+          project: "rubenpari-feat-eminem-16"
+          entrypoint: "./index.ts"
+          root: "./src"
