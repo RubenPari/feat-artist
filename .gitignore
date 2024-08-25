@@ -98,4 +98,5 @@ dist/
 !.env.vault
 
 # binary
+bin/
 feat-artist
