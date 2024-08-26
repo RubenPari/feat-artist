@@ -6,7 +6,7 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun run --watch src/index.ts",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\"",
     "build": "bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
   },
