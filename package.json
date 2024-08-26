@@ -1,26 +1,31 @@
 {
-    "scripts": {
-        "start": "bun run src/index.ts",
-        "dev": "bun run --watch src/index.ts",
-        "lint": "eslint ./src .ts", // TODO: fix
-        "format": "prettier --write \"src/**/*.ts\"",
-        "build": "bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
-    },
-    "dependencies": {
-        "@elysiajs/swagger": "^1.1.1",
-        "axios": "^1.7.5",
-        "elysia": "^1.1.7",
-        "spotify-web-api-node": "^5.0.2",
-        "uuid": "^10.0.0"
-    },
-    "devDependencies": {
-        "@types/axios": "^0.14.0",
-        "@types/node": "^22.5.0",
-        "@types/spotify-web-api-node": "^5.0.11",
-        "@types/uuid": "^10.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.2.0",
-        "@typescript-eslint/parser": "^8.2.0",
-        "eslint": "^9.9.1",
-        "prettier": "^3.3.3"
-    }
+  "type": "module",
+  "env": {
+    "node": true
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
+  },
+  "dependencies": {
+    "@elysiajs/swagger": "^1.1.1",
+    "axios": "^1.7.5",
+    "elysia": "^1.1.7",
+    "spotify-web-api-node": "^5.0.2",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^22.5.0",
+    "@types/spotify-web-api-node": "^5.0.11",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
+    "eslint": "^9.9.1",
+    "prettier": "^3.3.3"
+  }
 }
