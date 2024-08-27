@@ -1,4 +1,5 @@
 import TrackDto from '../dto/trackDto';
+import SpotifyApi from 'spotify-web-api-node';
 
 function convertTracksObjectToDto(
   tracksObjects:
