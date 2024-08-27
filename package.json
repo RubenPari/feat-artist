@@ -8,7 +8,7 @@
     "dev": "bun run --watch src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\"",
-    "build": "bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
+    "build": "rm -rf ./bin && bun build ./src/index.ts --compile --outfile ./bin/feat-artist"
   },
   "dependencies": {
     "@elysiajs/swagger": "^1.1.1",
