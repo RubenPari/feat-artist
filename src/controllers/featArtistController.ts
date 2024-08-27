@@ -1,47 +1,72 @@
-/*
-import { FastifyReply, FastifyRequest } from "fastify";
 import {
-  getAllTracksBadMeetsEvil,
-  getAllTracksD12,
-  orderTracksByListeners,
-  removeDuplicateTracks,
-  searchTracksEminem,
-  searchTracksFeatEminem,
-  searchTracksWithEminem,
-} from "../services/trackService";
+  searchArtistGroupOrDuo,
+  searchTracksArtist,
+  searchTracksFeatArtist,
+  searchTracksWithArtist,
+} from '../services/trackService';
 import {
   addTracksToPlaylist,
   removeAllPlaylistTracks,
-} from "../services/playlistService";
-import TrackDto from "../dto/trackDto";
-import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse";
-import "jsr:@std/dotenv/load";
+} from '../services/playlistService';
+import TrackDto from '../dto/trackDto';
+import RemoveAllPlaylistTracksResponse from '../models/RemoveAllPlaylistTracksResponse';
+import { Context } from 'elysia';
+import SpotifyApiService from '../services/spotifyApiService';
+import {
+  orderTracksByListeners,
+  removeDuplicateTracks,
+} from '../utils/trackUtils';
 
-const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
-  // search all tracks with query 'Eminem' and where first artist isn't Eminem
-  const searchTracksEminemResult = await searchTracksEminem();
-  const searchTracksFeatEminemResult = await searchTracksFeatEminem();
-  const searchTracksWithEminemResult = await searchTracksWithEminem();
+const featArtist = async (context: Context) => {
+  // get id artist query parameter
+  const idArtist = context.query.id;
 
-  const tracksBadMeetsEvil = await getAllTracksBadMeetsEvil();
-  const tracksD12 = await getAllTracksD12();
+  if (!idArtist) {
+    context.set.status = 400;
+    context.body = {
+      error: 'No id provided',
+    };
+    return;
+  }
 
-  // combine all search results without tracks from Bad Meets Evil and D12
-  const tracks = searchTracksEminemResult.concat(
-    searchTracksFeatEminemResult,
-    searchTracksWithEminemResult,
+  // get artist name from id
+  const artist =
+    await SpotifyApiService.getInstance().client.getArtist(idArtist);
+
+  if (!artist.body) {
+    context.set.status = 404;
+    context.body = {
+      error: 'Artist not found',
+    };
+    return;
+  }
+
+  const artistName = artist.body.name;
+
+  // search all tracks with query artist name and where first artist isn't then
+  const searchTracksArtistResult = await searchTracksArtist(artistName);
+  const searchTracksFeatArtistResult = await searchTracksFeatArtist(artistName);
+  const searchTracksWithArtistResult = await searchTracksWithArtist(artistName);
+  const searchGroupOrDuoArtistResult = await searchArtistGroupOrDuo(artistName);
+
+  // combine all search results
+  const tracks = searchTracksArtistResult.concat(
+    searchTracksFeatArtistResult,
+    searchTracksWithArtistResult
   );
 
-  // filter out tracks where Eminem is present but not as first artist
+  // filter out tracks where artist is present but not as first artist
   const filteredTracks = tracks.filter((track) => {
     return (
-      track.artists[0].name !== "Eminem" &&
-      track.artists.find((artist) => artist.name === "Eminem")
+      track.artists[0].name !== artistName &&
+      track.artists.find((artist) => artist.name === artistName)
     );
   });
 
-  // added tracks from Bad Meets Evil and D12
-  filteredTracks.push(...tracksBadMeetsEvil, ...tracksD12);
+  // added tracks from group/duo
+  if (searchGroupOrDuoArtistResult) {
+    filteredTracks.push(...searchGroupOrDuoArtistResult);
+  }
 
   const uniqueTracks = removeDuplicateTracks(filteredTracks);
 
@@ -51,35 +76,85 @@ const featEminem = async (_req: FastifyRequest, res: FastifyReply) => {
     orderedTracks = await orderTracksByListeners(uniqueTracks);
   } catch (e) {
     console.log(e);
+
+    context.set.status = 500;
+    context.body = {
+      error: 'Failed to order tracks by listeners',
+      messagge: e as string,
+    };
+    return;
   }
 
-  // clear playlist before adding new tracks
-  const cleared = await removeAllPlaylistTracks(
-    process.env."PLAYLIST_FEAT_EMINEM_ID"),
+  // get or create playlist for feat. {artist name}
+  let playlistId: string;
+
+  // search if user logged in have a playlist named "Feat. {artist name}"
+  const userPlaylists =
+    await SpotifyApiService.getInstance().client.getUserPlaylists();
+
+  const playlist = userPlaylists.body.items.find(
+    (playlist) => playlist.name === `Feat. ${artistName}`
   );
+
+  // if playlist doesn't exist, create it
+  if (!playlist) {
+    const createdPlaylist =
+      await SpotifyApiService.getInstance().client.createPlaylist(
+        `Feat. ${artistName}`,
+        {
+          description: `Playlist for feat. ${artistName}`,
+        }
+      );
+
+    if (!createdPlaylist.body) {
+      context.set.status = 500;
+      context.body = {
+        error: 'Failed to create playlist for artist' + artistName,
+      };
+      return;
+    }
+
+    playlistId = createdPlaylist.body.id;
+  }
+
+  playlistId = playlist!.id;
+
+  // clear playlist before adding new tracks
+  const cleared = await removeAllPlaylistTracks(playlistId);
 
   switch (cleared) {
     case RemoveAllPlaylistTracksResponse.Unauthorized:
-      res.status(401).send("unauthorized to clear playlist");
+      context.set.status = 401;
+      context.body = {
+        error: 'Unauthorized',
+      };
       break;
     case RemoveAllPlaylistTracksResponse.Failed:
-      res.status(500).send("failed to clear playlist");
+      context.set.status = 500;
+      context.body = {
+        error: 'Failed to clear playlist',
+      };
       break;
   }
 
   // add tracks to playlist
   const added = await addTracksToPlaylist(
-    orderedTracks.map((track) => track.uri),
+    orderedTracks.map((track) => track.uri)
   );
 
   if (!added) {
-    return res.status(500).send("error to add tracks to playlist");
+    context.set.status = 500;
+    context.body = {
+      error: 'Failed to add tracks to playlist',
+    };
+    return;
   }
 
-  res.status(200).send("tracks added to playlist");
+  context.body = {
+    message: 'Tracks added to playlist',
+  };
 };
 
 export default {
-  featEminem,
+  featArtist,
 };
-*/
