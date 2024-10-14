@@ -1,0 +1,26 @@
+# Deno specific files
+deno.lock
+deno.json
+
+# Node_modules equivalent
+node_modules/
+gen/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Miscellaneous
+*.tmp
+*.bak
+*.swp
+*.swo
