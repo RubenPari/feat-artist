@@ -24,3 +24,8 @@ Thumbs.db
 *.bak
 *.swp
 *.swo
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
