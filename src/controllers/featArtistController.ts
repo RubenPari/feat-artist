@@ -9,11 +9,11 @@ import {
   addTracksToPlaylist,
   removeAllPlaylistTracks,
 } from "../services/playlistService.ts";
-import RemoveAllPlaylistTracksResponse from "../models/RemoveAllPlaylistTracksResponse.ts";
 import SpotifyApiService from "../services/spotifyApiService.ts";
 import { orderTracksByListeners } from "../utils/trackUtils.ts";
 import TrackDto from "../dto/trackDto.ts";
 import { FastifyReply, FastifyRequest } from "fastify";
+import RemoveAllPlaylistTracksResponse from "../models/removeAllPlaylistTracksResponse.ts";
 
 const featArtist = async (request: FastifyRequest, reply: FastifyReply) => {
   const idArtist = (request.query as { id: string }).id;

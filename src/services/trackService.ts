@@ -101,10 +101,10 @@ async function searchArtistGroupOrDuo(
 
   for (const groupName of groupsOrDuosNames) {
     // get group or duo id from name
-    const groupOrDuoIdresult = await SpotifyApiService.getInstance().client
+    const groupOrDuoIdResult = await SpotifyApiService.getInstance().client
       .searchArtists(groupName);
 
-    const groupOrDuoId = groupOrDuoIdresult.body.artists!.items[0].id;
+    const groupOrDuoId = groupOrDuoIdResult.body.artists!.items[0].id;
 
     // get all tracks from group or duo
     // first get all albums from group or duo
